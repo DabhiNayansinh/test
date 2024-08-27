@@ -1,0 +1,434 @@
+/*
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `categories`
+--
+
+CREATE TABLE `categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `is_active` int(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cities`
+--
+
+CREATE TABLE `cities` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `countries`
+--
+
+CREATE TABLE `countries` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `email_queue`
+--
+
+CREATE TABLE `email_queue` (
+  `id` int(11) NOT NULL,
+  `recipient_email` varchar(255) NOT NULL,
+  `SUBJECT` varchar(255) NOT NULL,
+  `body` text NOT NULL,
+  `email_type` enum('order_confirmation','newsletter','password_reset','promotional') NOT NULL,
+  `STATUS` enum('pending','sent','failed','retry') DEFAULT 'pending',
+  `attempts` int(11) DEFAULT 0,
+  `error_message` text DEFAULT NULL,
+  `scheduled_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) NOT NULL,
+  `total` decimal(10,2) NOT NULL,
+  `is_active` int(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` int(11) NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `product_id` int(11) DEFAULT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `amount` decimal(10,2) NOT NULL,
+  `method` varchar(50) DEFAULT NULL,
+  `is_active` int(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pincodes`
+--
+
+CREATE TABLE `pincodes` (
+  `id` int(11) NOT NULL,
+  `city_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `products`
+--
+
+CREATE TABLE `products` (
+  `id` int(10) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `price` double NOT NULL,
+  `image` varchar(200) NOT NULL,
+  `description` text NOT NULL,
+  `stock_quantity` float NOT NULL,
+  `category_id` int(10) NOT NULL,
+  `is_active` tinyint(5) NOT NULL,
+  `created_on` datetime DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `is_deleted` tinyint(5) NOT NULL,
+  `deleted_on` datetime DEFAULT current_timestamp(),
+  `deleted_by` tinyint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `product_categories`
+--
+
+CREATE TABLE `product_categories` (
+  `product_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `is_active` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `states`
+--
+
+CREATE TABLE `states` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `is_active` smallint(5) NOT NULL,
+  `created_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_by` smallint(5) NOT NULL,
+  `modify_on` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  `modify_by` smallint(5) NOT NULL,
+  `deleted_on` datetime NOT NULL DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(10) NOT NULL,
+  `username` varchar(50) DEFAULT NULL,
+  `email` varchar(50) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `phone_number` varchar(20) DEFAULT NULL,
+  `mobile_number` varchar(20) NOT NULL,
+  `image` varchar(200) DEFAULT NULL,
+  `city_id` int(11) NOT NULL,
+  `state_id` int(11) NOT NULL,
+  `country_id` int(11) NOT NULL,
+  `pincode_id` int(11) NOT NULL,
+  `address_line1` varchar(200) DEFAULT NULL,
+  `address_line2` varchar(200) NOT NULL,
+  `is_active` tinyint(5) DEFAULT 1 COMMENT '1 => Active, 0 => In Active',
+  `created_on` datetime DEFAULT current_timestamp(),
+  `created_by` smallint(5) DEFAULT NULL,
+  `modify_on` datetime(5) DEFAULT NULL ON UPDATE current_timestamp(5),
+  `modify_by` smallint(200) DEFAULT NULL,
+  `is_deleted` tinyint(5) DEFAULT NULL,
+  `deleted_on` datetime DEFAULT current_timestamp(),
+  `deleted_by` smallint(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `categories`
+--
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cities`
+--
+ALTER TABLE `cities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `countries`
+--
+ALTER TABLE `countries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `email_queue`
+--
+ALTER TABLE `email_queue`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `pincodes`
+--
+ALTER TABLE `pincodes`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `products`
+--
+ALTER TABLE `products`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `product_categories`
+--
+ALTER TABLE `product_categories`
+  ADD PRIMARY KEY (`product_id`,`category_id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `states`
+--
+ALTER TABLE `states`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `categories`
+--
+ALTER TABLE `categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `cities`
+--
+ALTER TABLE `cities`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `countries`
+--
+ALTER TABLE `countries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `email_queue`
+--
+ALTER TABLE `email_queue`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `pincodes`
+--
+ALTER TABLE `pincodes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `products`
+--
+ALTER TABLE `products`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `states`
+--
+ALTER TABLE `states`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
+
+--
+-- Constraints for table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+
+--
+-- Constraints for table `product_categories`
+--
+ALTER TABLE `product_categories`
+  ADD CONSTRAINT `product_categories_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `product_categories_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`);
+COMMIT;
+*/
+
